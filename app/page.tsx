@@ -1,101 +1,316 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+import { useState } from 'react'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Switch } from "@/components/ui/switch"
+import { MainNav } from "@/components/main-nav"
+import { UserNav } from "@/components/user-nav"
+import { ArrowLeft, Search, Filter, SortAsc, Settings, Share2, Download, Trash2, Plus, PlayCircle, AlertTriangle, LinkIcon, Loader2, ChevronLeft, ChevronRight, X, Sparkles } from 'lucide-react'
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+interface Column {
+  id: string
+  name: string
 }
+
+interface EvaluationRow {
+  id: number
+  timestamp: string
+  [key: string]: string | number
+}
+
+export default function DataTablePage() {
+  const [isCollapsed, setIsCollapsed] = useState(false)
+  const [columns, setColumns] = useState<Column[]>([
+    { id: 'inputColumn', name: 'Input Column' },
+    { id: 'actionColumn', name: 'Action Column' },
+    { id: 'enrichCompany', name: 'Enrich Company' },
+  ])
+  const [data, setData] = useState<EvaluationRow[]>([
+    {
+      id: 1,
+      timestamp: "Oct 12, 2024 at 14:08 PM",
+      inputColumn: "Cell 1",
+      actionColumn: "Bitscale Evaluation - Account relevancy check",
+      enrichCompany: "Bitscale",
+    },
+    {
+      id: 2,
+      timestamp: "Oct 12, 2024 at 14:08 PM",
+      inputColumn: "Cell data size exceeds limit",
+      actionColumn: "BMW Evaluation - Relevancy check",
+      enrichCompany: "BMW",
+    },
+    {
+      id: 3,
+      timestamp: "Oct 12, 2024 at 14:08 PM",
+      inputColumn: "https://www.linkedin.com/bitScale",
+      actionColumn: "Google Evaluation - Lilevancy check",
+      enrichCompany: "Google",
+    },
+    {
+      id: 4,
+      timestamp: "Oct 12, 2024 at 14:08 PM",
+      inputColumn: "Loading data, Please wait",
+      actionColumn: "Apple Evaluation - Olivancy check",
+      enrichCompany: "Apple",
+    },
+    {
+      id: 5,
+      timestamp: "Oct 12, 2024 at 14:08 PM",
+      inputColumn: "Loading data, Please wait",
+      actionColumn: "Figma Evaluation - Evancy check",
+      enrichCompany: "Figma",
+    },
+  ])
+  const [newRow, setNewRow] = useState<Partial<EvaluationRow>>({})
+  const [isAddingRow, setIsAddingRow] = useState(false)
+  const [newColumnName, setNewColumnName] = useState('')
+
+  const handleAddRow = () => {
+    if (Object.keys(newRow).length > 0) {
+      setData([...data, {
+        id: data.length + 1,
+        timestamp: new Date().toLocaleString(),
+        ...newRow
+      }])
+      setNewRow({})
+      setIsAddingRow(false)
+    }
+  }
+
+  const handleAddColumn = () => {
+    if (newColumnName) {
+      const newColumnId = newColumnName.toLowerCase().replace(/\s+/g, '')
+      setColumns([...columns, { id: newColumnId, name: newColumnName }])
+      setData(data.map(row => ({ ...row, [newColumnId]: '' })))
+      setNewColumnName('')
+    }
+  }
+
+  return (
+    <SidebarProvider>
+      <div className="flex min-h-screen">
+        <Sidebar className="border-r">
+          <SidebarHeader className="border-b px-2 py-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="ml-auto"
+              onClick={() => setIsCollapsed(!isCollapsed)}
+            >
+              {isCollapsed ? <ChevronRight /> : <ChevronLeft />}
+            </Button>
+          </SidebarHeader>
+          <SidebarContent>
+            <MainNav isCollapsed={isCollapsed} />
+          </SidebarContent>
+        </Sidebar>
+        
+        <div className="flex-1 flex flex-col">
+          <div className="border-b">
+            <div className="flex h-16 items-center px-4 gap-4">
+              <SidebarTrigger />
+              <Input 
+                placeholder="Name of the file" 
+                className="max-w-[240px]"
+              />
+              <div className="ml-auto flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Switch />
+                  <span className="text-sm font-medium">Auto Save</span>
+                </div>
+                <UserNav />
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 px-4 py-2 border-t">
+              <div className="flex flex-wrap items-center gap-2 flex-1">
+                <div className="relative max-w-[240px]">
+                  <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input 
+                    placeholder="Search" 
+                    className="pl-8"
+                  />
+                </div>
+                <Select defaultValue="1/1">
+                  <SelectTrigger className="w-[100px]">
+                    <SelectValue placeholder="Row View" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1/1">1/1 Row</SelectItem>
+                    <SelectItem value="3/3">3/3 Column</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button variant="outline" size="icon">
+                  <Filter className="h-4 w-4" />
+                </Button>
+                <Button variant="outline" size="icon">
+                  <SortAsc className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <Button variant="outline" size="icon">
+                  <Settings className="h-4 w-4" />
+                </Button>
+                <Button variant="outline" size="icon">
+                  <Sparkles className="h-4 w-4" />
+                  <span className="sr-only">Enrich</span>
+                </Button>
+                <Button variant="outline" size="icon">
+                  <Share2 className="h-4 w-4" />
+                </Button>
+                <Button variant="outline" size="icon">
+                  <Download className="h-4 w-4" />
+                </Button>
+                <Button variant="outline" size="icon">
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-4 overflow-auto flex-1">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[50px]">#</TableHead>
+                  <TableHead className="w-[180px]">
+                    <div className="flex items-center gap-2">
+                      <PlayCircle className="h-4 w-4" />
+                      Time
+                    </div>
+                  </TableHead>
+                  {columns.map((column) => (
+                    <TableHead key={column.id}>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="bg-purple-100 text-purple-800 w-6 h-6 flex items-center justify-center rounded">
+                            {column.name[0].toUpperCase()}
+                          </span>
+                          {column.name}
+                        </div>
+                      </div>
+                    </TableHead>
+                  ))}
+                  <TableHead>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="sm">
+                          <Plus className="h-4 w-4 mr-2" />
+                          Add Column
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Add New Column</DialogTitle>
+                          <DialogDescription>
+                            Enter the name for your new column.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="name" className="text-right">
+                              Name
+                            </Label>
+                            <Input
+                              id="name"
+                              value={newColumnName}
+                              onChange={(e) => setNewColumnName(e.target.value)}
+                              className="col-span-3"
+                            />
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button onClick={handleAddColumn}>Add Column</Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {data.map((row) => (
+                  <TableRow key={row.id}>
+                    <TableCell>{row.id}</TableCell>
+                    <TableCell>{row.timestamp}</TableCell>
+                    {columns.map((column) => (
+                      <TableCell key={column.id}>{row[column.id]}</TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+                {isAddingRow && (
+                  <TableRow>
+                    <TableCell>New</TableCell>
+                    <TableCell>{new Date().toLocaleString()}</TableCell>
+                    {columns.map((column) => (
+                      <TableCell key={column.id}>
+                        <Input
+                          placeholder={column.name}
+                          value={newRow[column.id] || ''}
+                          onChange={(e) => setNewRow({...newRow, [column.id]: e.target.value})}
+                        />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                )}
+                <TableRow>
+                  <TableCell colSpan={columns.length + 3}>
+                    {isAddingRow ? (
+                      <div className="flex gap-2">
+                        <Button variant="outline" className="flex-1" onClick={handleAddRow}>
+                          <Plus className="h-4 w-4 mr-2" />
+                          Save Row
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => setIsAddingRow(false)}>
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button variant="outline" className="w-full" onClick={() => setIsAddingRow(true)}>
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Row
+                      </Button>
+                    )}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+      </div>
+    </SidebarProvider>
+  )
+}
+
