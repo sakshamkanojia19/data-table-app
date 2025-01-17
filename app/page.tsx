@@ -185,8 +185,13 @@ export default function DataTablePage() {
                   <Settings className="h-4 w-4" />
                 </Button>
                 <Button variant="outline" size="icon">
-                  <Sparkles className="h-4 w-4" />
-                  <span className="sr-only">Enrich</span>
+                <div className="relative group inline-block">
+  <Sparkles className="h-4 w-4" />
+  <span className="sr-only">Enrich</span>
+  <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-gray-800 text-white text-sm rounded px-2 py-1 shadow-lg">
+    Enrich
+  </div>
+</div>
                 </Button>
                 <Button variant="outline" size="icon">
                   <Share2 className="h-4 w-4" />
