@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -10,25 +10,39 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
-import { MainNav } from "@/components/main-nav"
-import { UserNav } from "@/components/user-nav"
-import { Search, Filter, SortAsc, Settings, Share2, Download, Trash2, Plus, PlayCircle, ChevronLeft, ChevronRight, X, Sparkles } from 'lucide-react'
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { MainNav } from "@/components/main-nav";
+import { UserNav } from "@/components/user-nav";
+import {
+  Search,
+  Filter,
+  SortAsc,
+  Settings,
+  Share2,
+  Download,
+  Trash2,
+  Plus,
+  PlayCircle,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  Sparkles,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 import {
   Dialog,
   DialogContent,
@@ -37,27 +51,27 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 
 interface Column {
-  id: string
-  name: string
+  id: string;
+  name: string;
 }
 
 interface EvaluationRow {
-  id: number
-  timestamp: string
-  [key: string]: string | number
+  id: number;
+  timestamp: string;
+  [key: string]: string | number;
 }
 
 export default function DataTablePage() {
-  const [isCollapsed, setIsCollapsed] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [columns, setColumns] = useState<Column[]>([
-    { id: 'inputColumn', name: 'Input Column' },
-    { id: 'actionColumn', name: 'Action Column' },
-    { id: 'enrichCompany', name: 'Enrich Company' },
-  ])
+    { id: "inputColumn", name: "Input Column" },
+    { id: "actionColumn", name: "Action Column" },
+    { id: "enrichCompany", name: "Enrich Company" },
+  ]);
   const [data, setData] = useState<EvaluationRow[]>([
     {
       id: 1,
@@ -94,31 +108,34 @@ export default function DataTablePage() {
       actionColumn: "Figma Evaluation - Evancy check",
       enrichCompany: "Figma",
     },
-  ])
-  const [newRow, setNewRow] = useState<Partial<EvaluationRow>>({})
-  const [isAddingRow, setIsAddingRow] = useState(false)
-  const [newColumnName, setNewColumnName] = useState('')
+  ]);
+  const [newRow, setNewRow] = useState<Partial<EvaluationRow>>({});
+  const [isAddingRow, setIsAddingRow] = useState(false);
+  const [newColumnName, setNewColumnName] = useState("");
 
   const handleAddRow = () => {
     if (Object.keys(newRow).length > 0) {
-      setData([...data, {
-        id: data.length + 1,
-        timestamp: new Date().toLocaleString(),
-        ...newRow
-      }])
-      setNewRow({})
-      setIsAddingRow(false)
+      setData([
+        ...data,
+        {
+          id: data.length + 1,
+          timestamp: new Date().toLocaleString(),
+          ...newRow,
+        },
+      ]);
+      setNewRow({});
+      setIsAddingRow(false);
     }
-  }
+  };
 
   const handleAddColumn = () => {
     if (newColumnName) {
-      const newColumnId = newColumnName.toLowerCase().replace(/\s+/g, '')
-      setColumns([...columns, { id: newColumnId, name: newColumnName }])
-      setData(data.map(row => ({ ...row, [newColumnId]: '' })))
-      setNewColumnName('')
+      const newColumnId = newColumnName.toLowerCase().replace(/\s+/g, "");
+      setColumns([...columns, { id: newColumnId, name: newColumnName }]);
+      setData(data.map((row) => ({ ...row, [newColumnId]: "" })));
+      setNewColumnName("");
     }
-  }
+  };
 
   return (
     <SidebarProvider>
@@ -138,15 +155,12 @@ export default function DataTablePage() {
             <MainNav isCollapsed={isCollapsed} />
           </SidebarContent>
         </Sidebar>
-        
+
         <div className="flex-1 flex flex-col">
           <div className="border-b">
             <div className="flex h-16 items-center px-4 gap-4">
               <SidebarTrigger />
-              <Input 
-                placeholder="Name of the file" 
-                className="max-w-[240px]"
-              />
+              <Input placeholder="Name of the file" className="max-w-[240px]" />
               <div className="ml-auto flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <Switch />
@@ -159,10 +173,7 @@ export default function DataTablePage() {
               <div className="flex flex-wrap items-center gap-2 flex-1">
                 <div className="relative max-w-[240px]">
                   <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <Input 
-                    placeholder="Search" 
-                    className="pl-8"
-                  />
+                  <Input placeholder="Search" className="pl-8" />
                 </div>
                 <Select defaultValue="1/1">
                   <SelectTrigger className="w-[100px]">
@@ -185,13 +196,13 @@ export default function DataTablePage() {
                   <Settings className="h-4 w-4" />
                 </Button>
                 <Button variant="outline" size="icon">
-                <div className="relative group inline-block">
-  <Sparkles className="h-4 w-4" />
-  <span className="sr-only">Enrich</span>
-  <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-gray-800 text-white text-sm rounded px-2 py-1 shadow-lg">
-    Enrich
-  </div>
-</div>
+                  <div className="relative group inline-block">
+                    <Sparkles className="h-4 w-4" />
+                    <span className="sr-only">Enrich</span>
+                    <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-gray-800 text-white text-sm rounded px-2 py-1 shadow-lg">
+                      Enrich
+                    </div>
+                  </div>
                 </Button>
                 <Button variant="outline" size="icon">
                   <Share2 className="h-4 w-4" />
@@ -283,8 +294,13 @@ export default function DataTablePage() {
                       <TableCell key={column.id}>
                         <Input
                           placeholder={column.name}
-                          value={newRow[column.id] || ''}
-                          onChange={(e) => setNewRow({...newRow, [column.id]: e.target.value})}
+                          value={newRow[column.id] || ""}
+                          onChange={(e) =>
+                            setNewRow({
+                              ...newRow,
+                              [column.id]: e.target.value,
+                            })
+                          }
                         />
                       </TableCell>
                     ))}
@@ -294,16 +310,28 @@ export default function DataTablePage() {
                   <TableCell colSpan={columns.length + 3}>
                     {isAddingRow ? (
                       <div className="flex gap-2">
-                        <Button variant="outline" className="flex-1" onClick={handleAddRow}>
+                        <Button
+                          variant="outline"
+                          className="flex-1"
+                          onClick={handleAddRow}
+                        >
                           <Plus className="h-4 w-4 mr-2" />
                           Save Row
                         </Button>
-                        <Button variant="ghost" size="icon" onClick={() => setIsAddingRow(false)}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setIsAddingRow(false)}
+                        >
                           <X className="h-4 w-4" />
                         </Button>
                       </div>
                     ) : (
-                      <Button variant="outline" className="w-full" onClick={() => setIsAddingRow(true)}>
+                      <Button
+                        variant="outline"
+                        className="w-full"
+                        onClick={() => setIsAddingRow(true)}
+                      >
                         <Plus className="h-4 w-4 mr-2" />
                         Add Row
                       </Button>
@@ -316,6 +344,5 @@ export default function DataTablePage() {
         </div>
       </div>
     </SidebarProvider>
-  )
+  );
 }
-
