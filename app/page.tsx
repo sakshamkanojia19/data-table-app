@@ -21,7 +21,7 @@ import {
 import { Switch } from "@/components/ui/switch"
 import { MainNav } from "@/components/main-nav"
 import { UserNav } from "@/components/user-nav"
-import { ArrowLeft, Search, Filter, SortAsc, Settings, Share2, Download, Trash2, Plus, PlayCircle, AlertTriangle, LinkIcon, Loader2, ChevronLeft, ChevronRight, X, Sparkles } from 'lucide-react'
+import { Search, Filter, SortAsc, Settings, Share2, Download, Trash2, Plus, PlayCircle, ChevronLeft, ChevronRight, X, Sparkles } from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
